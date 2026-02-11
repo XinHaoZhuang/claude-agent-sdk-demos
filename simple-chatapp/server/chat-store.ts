@@ -65,8 +65,10 @@ class ChatStore {
 
       // Auto-generate title from first user message if still "New Chat"
       if (chat.title === "New Chat" && message.role === "user") {
+        const MAX_TITLE_LENGTH = 50;
+        const MIN_CONTENT_LENGTH = 10;
         const titlePrefix = message.username ? `${message.username}: ` : "";
-        const maxContentLength = Math.max(10, 50 - titlePrefix.length);
+        const maxContentLength = Math.max(MIN_CONTENT_LENGTH, MAX_TITLE_LENGTH - titlePrefix.length);
         chat.title = titlePrefix + message.content.slice(0, maxContentLength) + (message.content.length > maxContentLength ? "..." : "");
       }
     }
