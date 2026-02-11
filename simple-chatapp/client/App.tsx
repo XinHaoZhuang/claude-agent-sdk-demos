@@ -53,7 +53,21 @@ export default function App() {
         break;
 
       case "user_message":
-        // User message already added locally for this user, or from another user
+        // Messages from other users need to be added to the message list
+        // (our own messages are already added optimistically)
+        if (message.userId !== userId) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: crypto.randomUUID(),
+              role: "user",
+              content: message.content,
+              timestamp: new Date().toISOString(),
+              userId: message.userId,
+              username: message.username,
+            },
+          ]);
+        }
         break;
 
       case "assistant_message":
