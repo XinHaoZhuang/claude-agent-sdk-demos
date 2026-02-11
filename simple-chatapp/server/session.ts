@@ -30,11 +30,13 @@ export class Session {
   }
 
   // Send a user message to the agent
-  sendMessage(content: string) {
+  sendMessage(content: string, userId?: string, username?: string) {
     // Store user message
     chatStore.addMessage(this.chatId, {
       role: "user",
       content,
+      userId,
+      username,
     });
 
     // Broadcast user message to subscribers
@@ -42,6 +44,8 @@ export class Session {
       type: "user_message",
       content,
       chatId: this.chatId,
+      userId,
+      username,
     });
 
     // Send to agent first (this starts the session if needed)

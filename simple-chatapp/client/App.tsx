@@ -17,6 +17,8 @@ interface Message {
   timestamp: string;
   toolName?: string;
   toolInput?: Record<string, any>;
+  userId?: string;
+  username?: string;
 }
 
 // Use relative URLs - Vite will proxy to the backend
@@ -28,12 +30,22 @@ export default function App() {
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [showUsernameDialog, setShowUsernameDialog] = useState(false);
 
   // Handle WebSocket messages
   const handleWSMessage = useCallback((message: any) => {
     switch (message.type) {
       case "connected":
         console.log("Connected to server");
+        setUserId(message.userId);
+        setUsername(message.username);
+        break;
+
+      case "identified":
+        console.log("Identified as:", message.username);
+        setUsername(message.username);
         break;
 
       case "history":
@@ -41,7 +53,7 @@ export default function App() {
         break;
 
       case "user_message":
-        // User message already added locally
+        // User message already added locally for this user, or from another user
         break;
 
       case "assistant_message":
@@ -164,6 +176,8 @@ export default function App() {
         role: "user",
         content,
         timestamp: new Date().toISOString(),
+        userId: userId || undefined,
+        username: username || undefined,
       },
     ]);
 
@@ -175,6 +189,17 @@ export default function App() {
       content,
       chatId: selectedChatId,
     });
+  };
+
+  // Update username
+  const handleUpdateUsername = (newUsername: string) => {
+    if (newUsername.trim() && isConnected) {
+      sendJsonMessage({
+        type: "identify",
+        username: newUsername.trim(),
+      });
+      setShowUsernameDialog(false);
+    }
   };
 
   // Initial fetch
@@ -193,6 +218,22 @@ export default function App() {
           onNewChat={createChat}
           onDeleteChat={deleteChat}
         />
+        
+        {/* User info section */}
+        <div className="border-t border-gray-200 p-3 bg-gray-50">
+          <div className="text-xs text-gray-500 mb-1">Logged in as:</div>
+          <div className="flex items-center justify-between">
+            <div className="font-semibold text-sm text-gray-700 truncate">
+              {username || "Loading..."}
+            </div>
+            <button
+              onClick={() => setShowUsernameDialog(true)}
+              className="text-xs text-blue-600 hover:text-blue-700"
+            >
+              Edit
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Main chat area */}
@@ -203,6 +244,46 @@ export default function App() {
         isLoading={isLoading}
         onSendMessage={handleSendMessage}
       />
+
+      {/* Username dialog */}
+      {showUsernameDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96">
+            <h3 className="text-lg font-semibold mb-4">Change Username</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const input = e.currentTarget.elements.namedItem("username") as HTMLInputElement;
+                handleUpdateUsername(input.value);
+              }}
+            >
+              <input
+                type="text"
+                name="username"
+                defaultValue={username || ""}
+                placeholder="Enter your username"
+                className="w-full px-3 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                autoFocus
+              />
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowUsernameDialog(false)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

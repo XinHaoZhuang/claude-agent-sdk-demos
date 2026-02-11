@@ -65,7 +65,8 @@ class ChatStore {
 
       // Auto-generate title from first user message if still "New Chat"
       if (chat.title === "New Chat" && message.role === "user") {
-        chat.title = message.content.slice(0, 50) + (message.content.length > 50 ? "..." : "");
+        const titlePrefix = message.username ? `${message.username}: ` : "";
+        chat.title = titlePrefix + message.content.slice(0, 50) + (message.content.length > 50 ? "..." : "");
       }
     }
 

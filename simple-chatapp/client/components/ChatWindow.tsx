@@ -7,6 +7,8 @@ interface Message {
   timestamp: string;
   toolName?: string;
   toolInput?: Record<string, any>;
+  userId?: string;
+  username?: string;
 }
 
 interface ChatWindowProps {
@@ -82,6 +84,11 @@ function MessageBubble({ message }: { message: Message }) {
             : "bg-gray-100 text-gray-900"
         }`}
       >
+        {isUser && message.username && (
+          <div className="text-xs opacity-80 mb-1 font-semibold">
+            {message.username}
+          </div>
+        )}
         <p className="whitespace-pre-wrap">{message.content}</p>
       </div>
     </div>
