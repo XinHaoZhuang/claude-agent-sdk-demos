@@ -1,68 +1,68 @@
-# Claude Agent SDK Demos
+# Claude Agent SDK 演示项目
 
-> ⚠️ **IMPORTANT**: These are demo applications by Anthropic. They are intended for local development only and should NOT be deployed to production or used at scale.
+> ⚠️ **重要提示**：这些是 Anthropic 提供的演示应用程序。它们仅用于本地开发，不应部署到生产环境或大规模使用。
 
-This repository contains multiple demonstrations of the [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk/overview), showcasing different ways to build AI-powered applications with Claude.
+本仓库包含多个 [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk/overview) 的演示项目，展示了使用 Claude 构建 AI 驱动应用程序的不同方式。
 
-## Available Demos
+## 可用演示
 
 ### 📧 [Email Agent](./email-agent)
-An in-development IMAP email assistant that can:
-- Display your inbox
-- Perform agentic search to find emails
-- Provide AI-powered email assistance
+一个开发中的 IMAP 邮件助手，可以：
+- 显示您的收件箱
+- 执行智能搜索以查找邮件
+- 提供 AI 驱动的邮件协助
 
 ### 📊 [Excel Demo](./excel-demo)
-Demonstrations of working with spreadsheets and Excel files using Claude.
+使用 Claude 处理电子表格和 Excel 文件的演示。
 
 ### 👋 [Hello World](./hello-world)
-A simple getting-started example to help you understand the basics of the Claude Agent SDK.
+一个简单的入门示例，帮助您了解 Claude Agent SDK 的基础知识。
 
 ### 🔬 [Research Agent](./research-agent)
-A multi-agent research system that coordinates specialized subagents to research topics and generate comprehensive reports:
-- Breaks research requests into subtopics
-- Spawns parallel researcher agents to search the web
-- Synthesizes findings into detailed reports
-- Demonstrates detailed subagent activity tracking
+一个多智能体研究系统，协调专门的子智能体来研究主题并生成全面的报告：
+- 将研究请求分解为子主题
+- 生成并行的研究者智能体来搜索网络
+- 将发现综合成详细的报告
+- 演示详细的子智能体活动跟踪
 
-## Quick Start
+## 快速开始
 
-Each demo has its own directory with dedicated setup instructions. Navigate to the specific demo folder and follow its README for setup and usage details.
+每个演示都有自己的目录和专门的设置说明。导航到特定的演示文件夹并按照其 README 进行设置和使用。
 
 
-## Prerequisites
+## 前置要求
 
-- [Bun](https://bun.sh) runtime (or Node.js 18+)
-- An Anthropic API key ([get one here](https://console.anthropic.com))
+- [Bun](https://bun.sh) 运行时（或 Node.js 18+）
+- Anthropic API 密钥（[在此获取](https://console.anthropic.com)）
 
-## Getting Started
+## 入门指南
 
-1. **Clone the repository**
+1. **克隆仓库**
 ```bash
 git clone https://github.com/anthropics/claude-agent-sdk-demos.git
 cd claude-agent-sdk-demos
 ```
 
-2. **Choose a demo and navigate to its directory**
+2. **选择一个演示并导航到其目录**
 ```bash
-cd email-agent  # or excel-demo, or hello-world
+cd email-agent  # 或 excel-demo，或 hello-world
 ```
 
-3. **Follow the demo-specific README** for setup and usage instructions
+3. **按照特定演示的 README** 进行设置和使用
 
-## Resources
+## 资源
 
-- [Claude Agent SDK Documentation](https://docs.anthropic.com/en/docs/claude-code/sdk/sdk-overview)
-- [API Reference](https://docs.anthropic.com/claude)
+- [Claude Agent SDK 文档](https://docs.anthropic.com/en/docs/claude-code/sdk/sdk-overview)
+- [API 参考](https://docs.anthropic.com/claude)
 - [GitHub Issues](https://github.com/anthropics/claude-agent-sdk-demos/issues)
 
-## Support
+## 支持
 
-These are demo applications provided as-is. For issues related to:
-- **Claude Agent SDK**: [SDK Documentation](https://docs.anthropic.com/claude-code)
-- **Demo Issues**: [GitHub Issues](https://github.com/anthropics/sdk-demos/issues)
-- **API Questions**: [Anthropic Support](https://support.anthropic.com)
+这些演示应用程序按原样提供。对于以下相关问题：
+- **Claude Agent SDK**：[SDK 文档](https://docs.anthropic.com/claude-code)
+- **演示问题**：[GitHub Issues](https://github.com/anthropics/sdk-demos/issues)
+- **API 问题**：[Anthropic 支持](https://support.anthropic.com)
 
-## License
+## 许可证
 
-MIT - This is sample code for demonstration purposes.
+MIT - 这是用于演示目的的示例代码。
