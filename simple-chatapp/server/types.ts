@@ -4,6 +4,8 @@ import type { WebSocket } from "ws";
 export interface WSClient extends WebSocket {
   sessionId?: string;
   isAlive?: boolean;
+  userId?: string;
+  username?: string;
 }
 
 // Chat stored in memory
@@ -21,6 +23,8 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   timestamp: string;
+  userId?: string;
+  username?: string;
 }
 
 // WebSocket incoming messages
@@ -35,4 +39,9 @@ export interface WSSubscribeMessage {
   chatId: string;
 }
 
-export type IncomingWSMessage = WSChatMessage | WSSubscribeMessage;
+export interface WSIdentifyMessage {
+  type: "identify";
+  username: string;
+}
+
+export type IncomingWSMessage = WSChatMessage | WSSubscribeMessage | WSIdentifyMessage;

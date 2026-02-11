@@ -5,6 +5,7 @@ import { createServer } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import path from "path";
 import { fileURLToPath } from "url";
+import { v4 as uuidv4 } from "uuid";
 import type { WSClient, IncomingWSMessage } from "./types.js";
 import { chatStore } from "./chat-store.js";
 import { Session } from "./session.js";
@@ -89,8 +90,17 @@ const wss = new WebSocketServer({ server, path: "/ws" });
 wss.on("connection", (ws: WSClient) => {
   console.log("WebSocket client connected");
   ws.isAlive = true;
+  
+  // Generate a unique user ID for this connection
+  ws.userId = uuidv4();
+  ws.username = `User-${ws.userId.slice(0, 8)}`;
 
-  ws.send(JSON.stringify({ type: "connected", message: "Connected to chat server" }));
+  ws.send(JSON.stringify({ 
+    type: "connected", 
+    message: "Connected to chat server",
+    userId: ws.userId,
+    username: ws.username,
+  }));
 
   ws.on("pong", () => {
     ws.isAlive = true;
@@ -101,10 +111,22 @@ wss.on("connection", (ws: WSClient) => {
       const message: IncomingWSMessage = JSON.parse(data.toString());
 
       switch (message.type) {
+        case "identify": {
+          // Allow client to set a custom username
+          ws.username = message.username;
+          ws.send(JSON.stringify({
+            type: "identified",
+            userId: ws.userId,
+            username: ws.username,
+          }));
+          console.log(`Client ${ws.userId} identified as ${ws.username}`);
+          break;
+        }
+
         case "subscribe": {
           const session = getOrCreateSession(message.chatId);
           session.subscribe(ws);
-          console.log(`Client subscribed to chat ${message.chatId}`);
+          console.log(`Client ${ws.username} (${ws.userId}) subscribed to chat ${message.chatId}`);
 
           // Send existing messages
           const messages = chatStore.getMessages(message.chatId);
@@ -119,7 +141,8 @@ wss.on("connection", (ws: WSClient) => {
         case "chat": {
           const session = getOrCreateSession(message.chatId);
           session.subscribe(ws);
-          session.sendMessage(message.content);
+          session.sendMessage(message.content, ws.userId, ws.username);
+          console.log(`Message from ${ws.username} (${ws.userId}) in chat ${message.chatId}`);
           break;
         }
 
@@ -133,7 +156,7 @@ wss.on("connection", (ws: WSClient) => {
   });
 
   ws.on("close", () => {
-    console.log("WebSocket client disconnected");
+    console.log(`WebSocket client disconnected: ${ws.username} (${ws.userId})`);
     // Unsubscribe from all sessions
     for (const session of sessions.values()) {
       session.unsubscribe(ws);
